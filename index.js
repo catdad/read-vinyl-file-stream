@@ -44,10 +44,14 @@ module.exports = function iterateStream(iterator, enc) {
         }
 
         if (file.isStream()) {
-            file.contents.pipe(ns.wait(function(err, data) {
+            ns.wait(file.contents, function(err, data) {
+                if (err) {
+                    return cb(err);
+                }
+
                 data = castData(data, enc);
                 iterator(data, file, stream, iteratorCallback);
-            }));
+            });
         } else if (file.isBuffer()) {
             content = castData(file.contents, enc);
             iterator(content, file, stream, iteratorCallback);
