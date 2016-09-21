@@ -199,4 +199,8 @@ describe('[index]', function () {
         input.push(file);
         input.end();
     });
+
+    it('handles errors from the iterator callback');
+
+    it('handles errors from reading a vinyl stream file');
 });
