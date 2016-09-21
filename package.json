@@ -6,7 +6,6 @@
     "test": "mocha",
     "coverage": "istanbul cover --dir coverage node_modules/mocha/bin/_mocha"
   },
-  "keywords": [],
   "author": "Kiril Vatev <vatev.1@gmail.com>",
   "license": "ISC",
   "devDependencies": {
@@ -33,5 +32,11 @@
     "url": "https://github.com/catdad/read-vinyl-file-stream/issues"
   },
   "homepage": "https://github.com/catdad/read-vinyl-file-stream#readme",
-  "description": ""
+  "description": "process a vinyl file stream with minimal code",
+  "keywords": [
+    "vinyl",
+    "stream",
+    "gulp",
+    "plugin"
+  ]
 }
