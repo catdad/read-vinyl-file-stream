@@ -119,7 +119,7 @@ describe('[index]', function () {
         input.end();
     });
 
-    it('can optionally read streams', function (done) {
+    it('can optionally read streams to a content string', function (done) {
         var input = through.obj();
         var CONTENT = Math.random().toString(36);
 
@@ -128,6 +128,52 @@ describe('[index]', function () {
 
             cb();
         }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            done();
+        });
+
+        input.push(fileStream({
+            content: CONTENT
+        }));
+        input.end();
+    });
+
+    it('can read a buffer file to buffer content', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            expect(Buffer.isBuffer(content)).to.equal(true);
+            expect(content.toString()).to.equal(CONTENT);
+
+            cb();
+        }, 'buffer'));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            done();
+        });
+
+        input.push(fileBuffer({
+            content: CONTENT
+        }));
+        input.end();
+    });
+
+    it('can read a stream file to buffer content', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            expect(Buffer.isBuffer(content)).to.equal(true);
+            expect(content.toString()).to.equal(CONTENT);
+
+            cb();
+        }, 'buffer'));
 
         ns.wait.obj(output, function (err, data) {
             expect(err).to.equal(null);
