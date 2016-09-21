@@ -294,4 +294,64 @@ describe('[index]', function () {
         input.push(fileBuffer());
         input.end();
     });
+
+    it('has an optional flush method', function (done) {
+        var input = through.obj();
+
+        var isAsync = false;
+        var flushCalled = false;
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb();
+        }, function (cb) {
+            flushCalled = true;
+
+            setImmediate(cb);
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            expect(isAsync).to.equal(true);
+            expect(flushCalled).to.equal(true);
+
+            done();
+        });
+
+        input.push(fileBuffer());
+        input.end();
+
+        isAsync = true;
+    });
+
+    it('can use the encoding parameter with the flush method', function (done) {
+         var input = through.obj();
+
+        var isAsync = false;
+        var flushCalled = false;
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            expect(Buffer.isBuffer(content)).to.equal(true);
+
+            cb();
+        }, function (cb) {
+            flushCalled = true;
+
+            setImmediate(cb);
+        }, 'buffer'));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            expect(isAsync).to.equal(true);
+            expect(flushCalled).to.equal(true);
+
+            done();
+        });
+
+        input.push(fileBuffer());
+        input.end();
+
+        isAsync = true;
+    });
 });

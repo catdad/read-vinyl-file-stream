@@ -8,6 +8,10 @@ var ns = require('node-stream');
 var encodings = ['utf8', 'utf-8', 'buffer'];
 var defaultEnc = 'utf8';
 
+function noopFlush(cb) {
+    cb();
+}
+
 function castData(data, enc) {
     var isBuffer = Buffer.isBuffer(data);
 
@@ -18,7 +22,16 @@ function castData(data, enc) {
     }
 }
 
-module.exports = function iterateStream(iterator, enc) {
+module.exports = function iterateStream(iterator, flush, enc) {
+    if (typeof flush === 'string') {
+        enc = flush;
+        flush = noopFlush;
+    }
+
+    if (typeof flush !== 'function') {
+        flush = noopFlush;
+    }
+
     var stream = through.obj(function (file, fileEnc, cb) {
 
         // continue if the file is null
@@ -59,7 +72,7 @@ module.exports = function iterateStream(iterator, enc) {
             // not sure what else it could be, but just deal with it
             cb();
         }
-    });
+    }, flush);
 
     return stream;
 };
