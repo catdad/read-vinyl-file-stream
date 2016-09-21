@@ -8,7 +8,7 @@ var ns = require('node-stream');
 var encodings = ['utf8', 'utf-8', 'buffer'];
 var defaultEnc = 'utf8';
 
-function noopFlush(cb) {
+function noopFlush(stream, cb) {
     cb();
 }
 
@@ -72,7 +72,9 @@ module.exports = function iterateStream(iterator, flush, enc) {
             // not sure what else it could be, but just deal with it
             cb();
         }
-    }, flush);
+    }, function (cb) {
+        flush(stream, cb);
+    });
 
     return stream;
 };

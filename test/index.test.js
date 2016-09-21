@@ -303,7 +303,9 @@ describe('[index]', function () {
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb();
-        }, function (cb) {
+        }, function (stream, cb) {
+            expect(stream).to.have.property('pipe').and.to.be.a('function');
+
             flushCalled = true;
 
             setImmediate(cb);
@@ -334,7 +336,9 @@ describe('[index]', function () {
             expect(Buffer.isBuffer(content)).to.equal(true);
 
             cb();
-        }, function (cb) {
+        }, function (stream, cb) {
+            expect(stream).to.have.property('pipe').and.to.be.a('function');
+
             flushCalled = true;
 
             setImmediate(cb);
