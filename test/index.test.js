@@ -140,4 +140,63 @@ describe('[index]', function () {
         }));
         input.end();
     });
+
+    it('skips null vinyl files', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+
+        var called = false;
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            called = true;
+            cb();
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            expect(called).to.equal(false);
+
+            done();
+        });
+
+        input.push({
+            isNull: function () {
+                return true;
+            }
+        });
+        input.end();
+    });
+
+    it('skips unknown vinyl files', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+
+        var called = false;
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            called = true;
+            cb();
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+
+            expect(called).to.equal(false);
+
+            done();
+        });
+
+        function no() {
+            return false;
+        }
+
+        var file = fileBuffer();
+        file.isNull = no;
+        file.isStream = no;
+        file.isBuffer = no;
+
+        input.push(file);
+        input.end();
+    });
 });
