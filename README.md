@@ -1,5 +1,28 @@
 # read vinyl file stream
 
+[![Build][1]][2]
+[![Test Coverage][3]][4]
+[![Code Climate][5]][6]
+[![Downloads][7]][8]
+[![Version][9]][8]
+[![Dependency Status][10]][11]
+
+[1]: https://travis-ci.org/catdad/read-vinyl-file.svg?branch=master
+[2]: https://travis-ci.org/catdad/read-vinyl-file
+
+[3]: https://codeclimate.com/github/catdad/read-vinyl-file/badges/coverage.svg
+[4]: https://codeclimate.com/github/catdad/read-vinyl-file/coverage
+
+[5]: https://codeclimate.com/github/catdad/read-vinyl-file/badges/gpa.svg
+[6]: https://codeclimate.com/github/catdad/read-vinyl-file
+
+[7]: https://img.shields.io/npm/dm/read-vinyl-file.svg
+[8]: https://www.npmjs.com/package/read-vinyl-file
+[9]: https://img.shields.io/npm/v/read-vinyl-file.svg
+
+[10]: https://david-dm.org/catdad/read-vinyl-file.svg
+[11]: https://david-dm.org/catdad/read-vinyl-file
+
 Turns out that reading all the files in a vinyl stream is cumbersome, and supporting all of the options is a littel bit annoying. I decided that I don't want to write that code more than once. So here is a library that does that. This is most useful for gulp plugins that need to transform all the files in a stream, though I am sure you can figure out other ways to use it too.
 
 ## Install
