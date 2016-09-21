@@ -200,7 +200,52 @@ describe('[index]', function () {
         input.end();
     });
 
-    it('handles errors from the iterator callback');
+    it('handles errors from the iterator callback', function (done) {
+        var ERR = new Error('pineapples');
 
-    it('handles errors from reading a vinyl stream file');
+        var input = through.obj();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb(ERR);
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(ERR);
+
+            done();
+        });
+
+        input.push(fileBuffer());
+        input.push(fileBuffer());
+        input.end();
+    });
+
+    it('handles errors from reading a vinyl stream file', function (done) {
+        var ERR = new Error('pineapples');
+
+        var input = through.obj();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            throw new Error('we should not read any data');
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(ERR);
+
+            done();
+        });
+
+        var filestream = through();
+
+        setImmediate(function () {
+            filestream.emit('error', ERR);
+        });
+
+        var file = fileStream();
+        file.contents = filestream;
+
+        input.push(file);
+        input.push(fileBuffer());
+        input.end();
+    });
 });
