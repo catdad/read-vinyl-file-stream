@@ -167,6 +167,74 @@ describe('[index]', function () {
         input.end();
     });
 
+    it('accepts string for new content', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+        var FILE = fileBuffer();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb(null, CONTENT.toString());
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+            expect(data)
+                .to.be.an('array')
+                .and.to.have.lengthOf(1)
+                .and.to.deep.equal([FILE]);
+
+            done();
+        });
+
+        input.push(FILE);
+        input.end();
+    });
+
+    it('accepts buffers for new content', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+        var FILE = fileBuffer();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb(null, new Buffer(CONTENT));
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+            expect(data)
+                .to.be.an('array')
+                .and.to.have.lengthOf(1)
+                .and.to.deep.equal([FILE]);
+
+            done();
+        });
+
+        input.push(FILE);
+        input.end();
+    });
+
+    it('removes files from the vinyl stream if the new content is not a string or buffer', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+        var FILE = fileBuffer();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb(null, 42);
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+            expect(data)
+                .to.be.an('array')
+                .and.to.have.lengthOf(0);
+
+            done();
+        });
+
+        input.push(FILE);
+        input.end();
+    });
+
     it('exposes the original stream, so you can push whatever you want', function (done) {
         var input = through.obj();
         var CONTENT = Math.random().toString(36);

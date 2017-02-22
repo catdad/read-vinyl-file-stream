@@ -62,7 +62,7 @@ module.exports = function iterateStream(iterator, flush, enc) {
                 return cb(err);
             }
 
-            if (content !== undefined) {
+            if (typeof content === 'string' || Buffer.isBuffer(content)) {
                 writeContent(file, content);
 
                 stream.push(file);
