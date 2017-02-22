@@ -37,12 +37,13 @@ npm install read-vinyl-file-stream
 
 The module is a function that creates a transform stream. It will read the vinyl file, whether it is a buffer or a stream internally. It takes the following parameters, in order:
 
-- **iterator** _{Function}_ Required - the method that will process the files.
+- **[iterator]** _{Function}_ Required - the method that will process the files.
 - **flush** _{Function}_ Optional - the method to call before the stream ends.
 - **encoding** _{String}_ Optional - the encoding to use for the content provided to the iterator function. By default, this is a UTF-8 string. The following options are supported:
   - `'utf8'` - provide the content in a UTF-8 string.
   - `'buffer'` - provide the content in a raw buffer. This is useful if you are processing binary files, for example.
 
+[iterator]: #iterator-content-file-stream-cb
 ### iterator(content, file, stream, cb)
 
 The function that you provide to it has the following parameters, in order:
