@@ -43,7 +43,7 @@ The module is a function that creates a transform stream. It will read the vinyl
   - `'utf8'` - provide the content in a UTF-8 string.
   - `'buffer'` - provide the content in a raw buffer. This is useful if you are processing binary files, for example.
 
-[iterator]: #iterator-content-file-stream-cb
+[iterator]: #iteratorcontent-file-stream-cb
 ### iterator(content, file, stream, cb)
 
 The function that you provide to it has the following parameters, in order:
