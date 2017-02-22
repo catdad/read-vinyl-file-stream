@@ -36,10 +36,34 @@ function fileStream(opts) {
     });
 }
 
+function inputStream(dataArr) {
+    var input = through.obj();
+
+    setImmediate(function () {
+        dataArr.forEach(function (file) {
+            input.push(file);
+        });
+
+        input.end();
+    });
+
+    return input;
+}
+
 describe('[index]', function () {
     it('iterates all files', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
+        var input = inputStream([
+            fileBuffer({
+                content: CONTENT
+            }),
+            fileBuffer({
+                content: CONTENT
+            }),
+            fileBuffer({
+                content: CONTENT
+            })
+        ]);
 
         var count = 0;
 
@@ -59,27 +83,15 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(fileBuffer({
-            content: CONTENT
-        }));
-        input.push(fileBuffer({
-            content: CONTENT
-        }));
-        input.push(fileBuffer({
-            content: CONTENT
-        }));
-        input.end();
     });
 
     // this test simulates a gulp task, to make sure this
     // module is compatible in a pipeline
     it('writes vinyl files as the output', function (done) {
-        var input = through.obj();
-        var count = 0;
         var files = [fileBuffer(), fileBuffer(), fileBuffer()];
+        var count = 0;
 
-        input
+        inputStream(files)
             .pipe(readFiles(function (content, file, stream, cb) {
                 cb(null, content);
             }))
@@ -95,18 +107,12 @@ describe('[index]', function () {
 
                 done();
             });
-
-        files.forEach(function (file) {
-            input.push(file);
-        });
-
-        input.end();
     });
 
     it('can write content back to the file as a buffer', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
         var FILE = fileBuffer();
+        var input = inputStream([FILE]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, CONTENT);
@@ -127,15 +133,12 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(FILE);
-        input.end();
     });
 
     it('can write content back to the file as a stream', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
         var FILE = fileStream();
+        var input = inputStream([FILE]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, CONTENT);
@@ -162,15 +165,12 @@ describe('[index]', function () {
                 done();
             });
         });
-
-        input.push(FILE);
-        input.end();
     });
 
     it('accepts string for new content', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
         var FILE = fileBuffer();
+        var input = inputStream([FILE]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, CONTENT.toString());
@@ -185,15 +185,12 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(FILE);
-        input.end();
     });
 
     it('accepts buffers for new content', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
         var FILE = fileBuffer();
+        var input = inputStream([FILE]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, new Buffer(CONTENT));
@@ -208,15 +205,12 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(FILE);
-        input.end();
     });
 
     it('removes files from the vinyl stream if the new content is not a string or buffer', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
         var FILE = fileBuffer();
+        var input = inputStream([FILE]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, 42);
@@ -230,13 +224,10 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(FILE);
-        input.end();
     });
 
     it('exposes the original stream, so you can push whatever you want', function (done) {
-        var input = through.obj();
+        var input = inputStream([fileBuffer()]);
         var CONTENT = Math.random().toString(36);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
@@ -256,14 +247,13 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(fileBuffer());
-        input.end();
     });
 
     it('can optionally read streams to a content string', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
+        var input = inputStream([fileStream({
+            content: CONTENT
+        })]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             expect(content).to.equal(CONTENT);
@@ -276,16 +266,13 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(fileStream({
-            content: CONTENT
-        }));
-        input.end();
     });
 
     it('can read a buffer file to buffer content', function (done) {
-        var input = through.obj();
         var CONTENT = Math.random().toString(36);
+        var input = inputStream([fileBuffer({
+            content: CONTENT
+        })]);
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             expect(Buffer.isBuffer(content)).to.equal(true);
@@ -299,11 +286,6 @@ describe('[index]', function () {
 
             done();
         });
-
-        input.push(fileBuffer({
-            content: CONTENT
-        }));
-        input.end();
     });
 
     it('can read a stream file to buffer content', function (done) {
