@@ -113,7 +113,7 @@ input.pipe(readFiles(function (content, file, stream, cb) {
 }));
 ```
 
-Use inside gulp (to create a filter):
+Use inside `gulp` (to create a filter):
 
 ```javascript
 var gulp = require('gulp');
