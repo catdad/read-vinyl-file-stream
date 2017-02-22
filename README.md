@@ -121,13 +121,13 @@ var readFiles = require('read-vinyl-file-stream');
 
 gulp.task('mytask', function() {
     return gulp.src('*.ext')
-        .pipe(readFiles(content, file, stream, cb) {
+        .pipe(readFiles(function (content, file, stream, cb) {
             if (/^n/.test(content)) {
                 return cb(null, content);
             }
 
             cb();
-        })
+        }))
         .pipe(gulp.dest('filesThatStartWithN'));
 });
 ```
