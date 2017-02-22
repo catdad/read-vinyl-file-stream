@@ -44,7 +44,7 @@ The module is a function that creates a transform stream. It will read the vinyl
   - `'buffer'` - provide the content in a raw buffer. This is useful if you are processing binary files, for example.
 
 [iterator]: #iteratorcontent-file-stream-cb
-### iterator(content, file, stream, cb)
+#### iterator(content, file, stream, cb)
 
 The function that you provide to it has the following parameters, in order:
 
@@ -54,7 +54,7 @@ The function that you provide to it has the following parameters, in order:
 - **cb** - a callback to call once you are done processing the file. You must call this in order for the stream to continue.
 
 [flush]: #flushstream-cb
-### flush(stream, cb)
+#### flush(stream, cb)
 
 This is a function that will allow you to execute some code after all the files have been read but before the stream ends. It has the following parameters, in order:
 
