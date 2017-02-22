@@ -22,6 +22,19 @@ function castData(data, enc) {
     }
 }
 
+function writeContent(file, content) {
+    if (file.isStream()) {
+        var stream = through();
+
+        file.contents = stream;
+
+        stream.write(content);
+        stream.end();
+    } else {
+        file.contents = new Buffer(content);
+    }
+}
+
 module.exports = function iterateStream(iterator, flush, enc) {
     if (typeof flush === 'string') {
         enc = flush;
@@ -50,7 +63,9 @@ module.exports = function iterateStream(iterator, flush, enc) {
             }
 
             if (content !== undefined) {
-                stream.push(content);
+                writeContent(file, content);
+
+                stream.push(file);
             }
 
             cb();

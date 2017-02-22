@@ -5,6 +5,7 @@ var expect = require('chai').expect;
 var File = require('vinyl');
 var ns = require('node-stream');
 var through = require('through2');
+var isStream = require('is-stream');
 
 var readFiles = require('../');
 
@@ -71,9 +72,10 @@ describe('[index]', function () {
         input.end();
     });
 
-    it('can write content back to the stream', function (done) {
+    it('can write content back to the file as a buffer', function (done) {
         var input = through.obj();
         var CONTENT = Math.random().toString(36);
+        var FILE = fileBuffer();
 
         var output = input.pipe(readFiles(function (content, file, stream, cb) {
             cb(null, CONTENT);
@@ -84,12 +86,53 @@ describe('[index]', function () {
             expect(data)
                 .to.be.an('array')
                 .and.to.have.lengthOf(1)
-                .and.to.deep.equal([CONTENT]);
+                .and.to.deep.equal([FILE]);
+
+            var file = data[0];
+
+            expect(Buffer.isBuffer(file.contents)).to.equal(true);
+
+            expect(file.contents.toString()).to.equal(CONTENT);
 
             done();
         });
 
-        input.push(fileBuffer());
+        input.push(FILE);
+        input.end();
+    });
+
+    it('can write content back to the file as a stream', function (done) {
+        var input = through.obj();
+        var CONTENT = Math.random().toString(36);
+        var FILE = fileStream();
+
+        var output = input.pipe(readFiles(function (content, file, stream, cb) {
+            cb(null, CONTENT);
+        }));
+
+        ns.wait.obj(output, function (err, data) {
+            expect(err).to.equal(null);
+            expect(data)
+                .to.be.an('array')
+                .and.to.have.lengthOf(1)
+                .and.to.deep.equal([FILE]);
+
+            var file = data[0];
+
+            expect(isStream.readable(file.contents)).to.equal(true);
+
+            ns.wait(file.contents, function (err, newContent) {
+                if (err) {
+                    return done(err);
+                }
+
+                expect(newContent.toString()).and.to.equal(CONTENT);
+
+                done();
+            });
+        });
+
+        input.push(FILE);
         input.end();
     });
 
