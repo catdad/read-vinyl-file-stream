@@ -72,6 +72,37 @@ describe('[index]', function () {
         input.end();
     });
 
+    // this test simulates a gulp task, to make sure this
+    // module is compatible in a pipeline
+    it('writes vinyl files as the output', function (done) {
+        var input = through.obj();
+        var count = 0;
+        var files = [fileBuffer(), fileBuffer(), fileBuffer()];
+
+        input
+            .pipe(readFiles(function (content, file, stream, cb) {
+                cb(null, content);
+            }))
+            .on('data', function onFile(file) {
+                expect(file).to.be.instanceOf(File);
+                expect(file).to.have.property('contents');
+
+                count += 1;
+            })
+            .on('error', done)
+            .on('end', function () {
+                expect(count).to.equal(files.length);
+
+                done();
+            });
+
+        files.forEach(function (file) {
+            input.push(file);
+        });
+
+        input.end();
+    });
+
     it('can write content back to the file as a buffer', function (done) {
         var input = through.obj();
         var CONTENT = Math.random().toString(36);
