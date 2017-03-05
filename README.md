@@ -23,7 +23,7 @@
 [10]: https://david-dm.org/catdad/read-vinyl-file-stream.svg
 [11]: https://david-dm.org/catdad/read-vinyl-file-stream
 
-Turns out that reading all the files in a vinyl stream is cumbersome, and supporting all of the options is a littel bit annoying. I decided that I don't want to write that code more than once. So here is a library that does that. This is most useful for gulp plugins that need to transform all the files in a stream, though I am sure you can figure out other ways to use it too.
+Turns out that reading all the files in a vinyl stream is cumbersome, and supporting all of the options is a little bit annoying. I decided that I don't want to write that code more than once. So here is a library that does that. This is most useful for gulp plugins that need to transform all the files in a stream, though I am sure you can figure out other ways to use it too.
 
 ## Install
 
