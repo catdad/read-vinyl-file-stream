@@ -52,9 +52,6 @@ module.exports = function iterateStream(iterator, flush, enc) {
             return cb();
         }
 
-        var filepath = file.path || file.history[0];
-        var name = path.basename(filepath);
-
         var content;
 
         function iteratorCallback(err, content) {
