@@ -1,13 +1,13 @@
 language: node_js
 
 node_js:
-  - "node"
-  - "7.2"
-  - "6.9"
-  - "5.12"
-  - "4.4"
-  - "iojs"
-  - "0.12"
+  - node
+  - '7.2'
+  - '6.9'
+  - '5.12'
+  - '4.4'
+  - 'iojs'
+  - '0.12'
 
 addons:
   code_climate:
@@ -16,3 +16,13 @@ addons:
 after_script:
   - npm run coverage
   - codeclimate-test-reporter < coverage/lcov.info
+
+deploy:
+  provider: npm
+  email: vatev.1@gmail.com
+  api_key:
+    secure: fKMe9NCLZYQa973/pVJQY4fEEE2e3nupMwXk6aWv8Np818ofG51deRozEGIXPwAN6JjppAKt31BdrxSGLGA65n983J7CnLl7s0M3o4Cr4KzQ3/N9OU8S17LYbtylSDT28KVGC5lVgyFJR0NaCKZYog6Ry1ruUagOKRrQQuZH00ZkFsI8r0LsXEnLD3vr2Qe3fldU37DIPdOshutiwCeXdMwZt+COk182tBQdMLr0SqLVlNdnpdmNCtYIhGW1Y1syKjVmNyqbNnAd1rkJ9Xmc41XHNT/GDKWsa+682Xfmb4W7IbbHsNH6vqh8nm7CkQFRL+dhnqS4hc1ZRtgxX4ricPTNs9BWm8GUvMHcwAoFqLLcKXrH0RbRnrf+wn3bbX7OcaUegipft/y6n+qkbHFAk/E4PAG+QqgbRxy7dNpdbjUAnP/0Dcm1Kd9Zp2TdOtxElcilhYS8wDoZ33vYNoS0mW1P062fd9BmdAZWI2aS7RwALDpWvT9O8YY49OYWN4HTtis1ZK5mF1pWziNdWGQcVR07qqwFWmyB3a8tFn8oVcCYA36yVbJMvxjyR0nCqL8mgPaHPdD73V/DjSsdyymhxCRK6Xs+bQoTLSWFWYpyjf2gqI0ViGYHl1+1Y0eiC2lxUMmgbgJ4KLBkQg+G5/19EPzs5XSv0cubEo/0kZfaUXc=
+  on:
+    tags: true
+    node: '6.9'
+    repo: catdad/read-vinyl-file-stream
